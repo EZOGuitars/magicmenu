@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "magicmike.frontrow",
+  "name": "MagicMenu",
+  "version": "1.3.0",
+  "author": "MagicMike, Project47 Labs",
+  "description": "Retro CRT application launcher with classic fonts, themes, session controls and live system statistics",
+  "kinds": [
+    "bar-widget",
+    "menu"
+  ],
+  "entryPoints": {
+    "barWidget": "Widget.qml",
+    "menu": "Menu.qml"
+  },
+  "barWidget": {
+    "displayName": "MagicMenu",
+    "category": "Applications",
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}
