@@ -12,6 +12,13 @@ BarWidget {
   moduleName: "magicmike.frontrow"
   implicitWidth: button.implicitWidth
   implicitHeight: barSize
+  FileView {
+    path: Qt.resolvedUrl("manifest.json")
+    JsonAdapter {
+      id: metadata
+      property string version: ""
+    }
+  }
   Settings {
     id: preferences
     location: Qt.resolvedUrl("../../magicmenu.ini")
@@ -389,11 +396,20 @@ BarWidget {
       }
       Text {
         x: 12; y: 7
-        width: parent.width - 24
+        width: versionLabel.x - x - 12
         elide: Text.ElideRight
         text: "╔═ MagicMenu / APPLICATION DIRECTORY ═╗"
         color: root.ink
         font.family: root.menuFont; font.pixelSize: 19; font.bold: true
+      }
+      Text {
+        id: versionLabel
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        y: 9
+        text: metadata.version ? "v" + metadata.version : ""
+        color: root.palette.muted
+        font.family: root.menuFont; font.pixelSize: 13
       }
       Text {
         x: 12; y: 36

@@ -4,6 +4,14 @@ By **EZO Guitars**.
 
 A CRT-style application launcher for the Omarchy Quickshell desktop: application search and categories, classic PC fonts, five color palettes, configurable effects, session controls, and live CPU/RAM/disk/network statistics.
 
+## Screenshots
+
+MagicMenu v1.3.1. The top-right label reads the installed version from the plugin manifest.
+
+![MagicMenu application directory with version label and live system statistics](screenshots/menu.png)
+
+![MagicMenu appearance settings with font, size, color, and sample preview](screenshots/settings.png)
+
 ## Requirements
 
 Omarchy with the Quickshell plugin system and app-library host capability, Python 3, and Linux procfs/sysfs. This is not a Walker plugin. Ubuntu Mono, Nimbus Mono PS, Liberation Mono and JetBrainsMono Nerd Font are system fonts; install them separately if absent. Three IBM fonts are bundled.

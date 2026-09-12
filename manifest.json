@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "magicmike.frontrow",
   "name": "MagicMenu",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "author": "MagicMike, Project47 Labs",
   "description": "Retro CRT application launcher with classic fonts, themes, session controls and live system statistics",
   "kinds": [
