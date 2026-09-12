@@ -175,7 +175,9 @@ BarWidget {
   }
   Process {
     id: statsProcess
-    command: ["python3", Qt.resolvedUrl("system-stats.py").toString().replace("file://", "")]
+    // Use a fixed interpreter and an isolated startup environment. This keeps
+    // inherited PATH/PYTHONPATH/sitecustomize state out of the helper.
+    command: ["/usr/bin/env", "-i", "PATH=/usr/bin:/bin", "PYTHONNOUSERSITE=1", "PYTHONPATH=", "/usr/bin/python3", Qt.resolvedUrl("system-stats.py").toString().replace("file://", "")]
     stdout: StdioCollector {
       onStreamFinished: {
         try {
@@ -592,7 +594,7 @@ BarWidget {
             }
             onClicked: {
               root.close()
-              Quickshell.execDetached(["omarchy", "system", modelData.action])
+              Quickshell.execDetached(["/usr/share/omarchy/bin/omarchy", "system", modelData.action])
             }
           }
         }

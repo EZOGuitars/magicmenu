@@ -3,10 +3,10 @@ import Quickshell
 
 Item {
   function open(payload) {
-    Quickshell.execDetached(["omarchy-shell", "magicmike.frontrow", "open"])
+    Quickshell.execDetached(["/usr/share/omarchy/bin/omarchy-shell", "magicmike.frontrow", "open"])
   }
   function close() {
-    Quickshell.execDetached(["omarchy-shell", "magicmike.frontrow", "close"])
+    Quickshell.execDetached(["/usr/share/omarchy/bin/omarchy-shell", "magicmike.frontrow", "close"])
   }
-  function toggle(payload) { Quickshell.execDetached(["omarchy-shell", "magicmike.frontrow", "toggle"]) }
+  function toggle(payload) { Quickshell.execDetached(["/usr/share/omarchy/bin/omarchy-shell", "magicmike.frontrow", "toggle"]) }
 }
