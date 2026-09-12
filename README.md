@@ -31,6 +31,6 @@ Sampling starts on opening. A second sample after 250 ms establishes initial CPU
 
 The helper only reads local system counters. It makes no network requests and sends no telemetry.
 
-## Packaging status
+## License
 
-Local publication draft. Original-code license and public repository are not yet selected. Do not submit until those are resolved. Font licenses and attribution are in `THIRD_PARTY_NOTICES.md` and `fonts/`.
+MagicMenu source code is licensed under the MIT License. Bundled IBM fonts have separate Creative Commons Attribution-ShareAlike terms documented in `THIRD_PARTY_NOTICES.md` and `fonts/`.
