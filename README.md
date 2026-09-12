@@ -1,6 +1,6 @@
 # MagicMenu
 
-By **MagicMike, Project47 Labs**.
+By **EZO Guitars**.
 
 A CRT-style application launcher for the Omarchy Quickshell desktop: application search and categories, classic PC fonts, five color palettes, configurable effects, session controls, and live CPU/RAM/disk/network statistics.
 
