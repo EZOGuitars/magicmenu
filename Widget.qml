@@ -221,11 +221,14 @@ BarWidget {
     onTriggered: root.updateStats()
   }
   property bool opened: false
+  property bool interactionActive: false
   property real bootProgress: 1
   property real glitchProgress: 0
   property int idleGlitches: 0
   function activity() {
     if (!opened) return
+    interactionActive = true
+    interactionSleep.restart()
     glitch.stop()
     glitchProgress = 0
     idleTimer.restart()
@@ -239,10 +242,14 @@ BarWidget {
       networkText = "NET ↑ sampling…  ↓ sampling…"
       updateStats()
       firstStatsSample.restart()
+      interactionActive = true
+      interactionSleep.restart()
       if (effectsEnabled && preferences.startup) boot.restart()
       idleTimer.restart()
     } else {
       firstStatsSample.stop()
+      interactionSleep.stop()
+      interactionActive = false
       idleTimer.stop()
       boot.stop()
       glitch.stop()
@@ -251,9 +258,14 @@ BarWidget {
     }
   }
   Timer {
+    id: interactionSleep
+    interval: 1400
+    onTriggered: root.interactionActive = false
+  }
+  Timer {
     id: idleTimer
     interval: preferences.intensity === 2 ? 3500 : 6000
-    onTriggered: if (root.opened && root.effectsEnabled && preferences.glitches) { root.idleGlitches++; glitch.restart() }
+    onTriggered: if (root.opened && root.interactionActive && root.effectsEnabled && preferences.glitches) { root.idleGlitches++; glitch.restart() }
   }
   NumberAnimation {
     id: boot
@@ -340,8 +352,9 @@ BarWidget {
     contentHeight: Math.min(580 * root.fontScale, screen ? screen.height - 70 : 580 * root.fontScale)
     padding: 8
     borderSpec: Border.flat(root.palette.line, 1)
-    color: Qt.rgba(0, 0, 0, root.opened ? 0.28 : 0)
-    Behavior on color { ColorAnimation { duration: 140 } }
+    // The panel is a full-screen layer for input routing, but must remain
+    // visually transparent outside the card itself.
+    color: "transparent"
     focusTarget: search
     Item {
       id: terminal
@@ -618,7 +631,7 @@ BarWidget {
         id: phosphorSweep
         width: terminal.width; height: 72
         enabled: false
-        visible: root.opened && root.effectsEnabled && preferences.sweep
+        visible: root.opened && root.interactionActive && root.effectsEnabled && preferences.sweep
         opacity: 0.08 * root.effectStrength
         gradient: Gradient {
           GradientStop { position: 0; color: "transparent" }
@@ -630,7 +643,7 @@ BarWidget {
           from: -72; to: terminal.height
           duration: preferences.intensity === 2 ? 2800 : 4500
           loops: Animation.Infinite
-          running: root.opened && root.effectsEnabled && preferences.sweep
+          running: root.opened && root.interactionActive && root.effectsEnabled && preferences.sweep
         }
       }
       Rectangle {
@@ -641,7 +654,7 @@ BarWidget {
         border.width: 2
         opacity: root.effectsEnabled ? 0.35 : 0
         SequentialAnimation on opacity {
-          running: root.opened && root.effectsEnabled && preferences.sweep
+          running: root.opened && root.interactionActive && root.effectsEnabled && preferences.sweep
           loops: Animation.Infinite
           NumberAnimation { to: 0.7; duration: 1400 }
           NumberAnimation { to: 0.2; duration: 1400 }
