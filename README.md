@@ -1,12 +1,12 @@
 # MagicMenu
 
-By **EZO Guitars**.
+By **EZOGuitars**.
 
 A CRT-style application launcher for the Omarchy Quickshell desktop: application search and categories, classic PC fonts, five color palettes, configurable effects, session controls, and live CPU/RAM/disk/network statistics.
 
 ## Screenshots
 
-MagicMenu v1.3.1. The top-right label reads the installed version from the plugin manifest.
+MagicMenu v1.3.2. The top-right label reads the installed version from the plugin manifest.
 
 ![MagicMenu application directory with version label and live system statistics](screenshots/menu.png)
 

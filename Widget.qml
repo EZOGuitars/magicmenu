@@ -287,6 +287,16 @@ BarWidget {
     onFinished: { root.glitchProgress = 0; if (root.opened) idleTimer.restart() }
   }
   property string category: ""
+  readonly property var categoryModel: [
+    {name: "ALL PROGRAMS", tag: ""},
+    {name: "INTERNET", tag: "Network"},
+    {name: "MEDIA", tag: "AudioVideo"},
+    {name: "GRAPHICS", tag: "Graphics"},
+    {name: "WORK", tag: "Office"},
+    {name: "DEVELOPMENT", tag: "Development"},
+    {name: "GAMES", tag: "Game"},
+    {name: "UTILITIES", tag: "Utility"}
+  ]
   property var entries: []
   readonly property var library: bar && bar.shell ? bar.shell.appLibrary : null
   readonly property color ink: palette.ink
@@ -299,6 +309,13 @@ BarWidget {
         (app.categories || []).indexOf(category) >= 0
     })
     grid.currentIndex = entries.length ? 0 : -1
+  }
+  function selectCategory(index) {
+    if (index < 0 || index >= categoryModel.length) return
+    categoryList.currentIndex = index
+    category = categoryModel[index].tag
+    search.text = ""
+    refresh()
   }
   function open() {
     if (bar) bar.requestPopout(root)
@@ -459,7 +476,11 @@ BarWidget {
         onTextChanged: { root.activity(); root.refresh() }
         Keys.onReleased: function(event) { root.activity(); event.accepted = false }
         onAccepted: root.launch(grid.currentIndex)
-        Keys.onDownPressed: { grid.forceActiveFocus(); if (grid.currentIndex < 0 && grid.count) grid.currentIndex = 0 }
+        Keys.onDownPressed: {
+          grid.forceActiveFocus()
+          if (grid.currentIndex < 0 && grid.count) grid.currentIndex = 0
+          grid.positionViewAtIndex(grid.currentIndex, ListView.Contain)
+        }
         Keys.onEscapePressed: root.close()
       }
       Text {
@@ -478,37 +499,49 @@ BarWidget {
         x: 176; y: 160; width: 1; height: parent.height - 249
         color: root.palette.line
       }
-      Column {
+      ListView {
+        id: categoryList
         x: 10; y: 185; width: 156; spacing: 2
-        Repeater {
-          model: [
-            {name: "ALL PROGRAMS", tag: ""},
-            {name: "INTERNET", tag: "Network"},
-            {name: "MEDIA", tag: "AudioVideo"},
-            {name: "GRAPHICS", tag: "Graphics"},
-            {name: "WORK", tag: "Office"},
-            {name: "DEVELOPMENT", tag: "Development"},
-            {name: "GAMES", tag: "Game"},
-            {name: "UTILITIES", tag: "Utility"}
-          ]
-          delegate: Rectangle {
-            required property var modelData
-            width: 156; height: 32
-            color: root.category === modelData.tag ? root.ink : categoryMouse.containsMouse ? root.palette.hover : "transparent"
-            Text {
-              anchors.verticalCenter: parent.verticalCenter
-              x: 5
-              text: (root.category === modelData.tag ? "> " : "  ") + modelData.name
-              color: root.category === modelData.tag ? root.palette.bg : root.ink
-              font.family: root.menuFont; font.pixelSize: 14
-            }
-            MouseArea {
-              id: categoryMouse
-              anchors.fill: parent
-              hoverEnabled: true
-              cursorShape: Qt.PointingHandCursor
-              onClicked: { root.activity(); root.category = modelData.tag; search.text = ""; root.refresh(); search.forceActiveFocus() }
-            }
+        height: parent.height - y - 89
+        clip: true
+        model: root.categoryModel
+        currentIndex: 0
+        keyNavigationEnabled: true
+        boundsBehavior: Flickable.StopAtBounds
+        ScrollBar.vertical: ScrollBar {
+          contentItem: Rectangle { implicitWidth: 4; color: root.palette.muted }
+          background: Rectangle { color: root.palette.surface }
+        }
+        Keys.onRightPressed: {
+          grid.forceActiveFocus()
+          grid.positionViewAtIndex(grid.currentIndex, ListView.Contain)
+        }
+        Keys.onReturnPressed: root.selectCategory(currentIndex)
+        Keys.onEnterPressed: root.selectCategory(currentIndex)
+        Keys.onEscapePressed: root.close()
+        onCurrentIndexChanged: {
+          if (activeFocus && currentIndex >= 0) root.selectCategory(currentIndex)
+        }
+        delegate: Rectangle {
+          id: categoryRow
+          required property var modelData
+          required property int index
+          width: categoryList.width - 10; height: 32
+          color: categoryList.currentIndex === index && categoryList.activeFocus ? root.ink
+            : root.category === modelData.tag ? root.palette.hover : categoryMouse.containsMouse ? root.palette.hover : "transparent"
+          Text {
+            anchors.verticalCenter: parent.verticalCenter
+            x: 5
+            text: (categoryList.currentIndex === categoryRow.index && categoryList.activeFocus ? "► " : root.category === modelData.tag ? "> " : "  ") + modelData.name
+            color: categoryList.currentIndex === categoryRow.index && categoryList.activeFocus ? root.palette.bg : root.ink
+            font.family: root.menuFont; font.pixelSize: 14
+          }
+          MouseArea {
+            id: categoryMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: { root.activity(); root.selectCategory(categoryRow.index); categoryList.forceActiveFocus() }
           }
         }
       }
@@ -531,6 +564,10 @@ BarWidget {
         Keys.onReturnPressed: root.launch(currentIndex)
         Keys.onEnterPressed: root.launch(currentIndex)
         Keys.onEscapePressed: root.close()
+        Keys.onLeftPressed: {
+          categoryList.forceActiveFocus()
+          categoryList.positionViewAtIndex(categoryList.currentIndex, ListView.Contain)
+        }
         Keys.onPressed: function(event) {
           if (event.text && event.text.length === 1 && !(event.modifiers & (Qt.ControlModifier | Qt.AltModifier))) {
             search.forceActiveFocus()
@@ -565,7 +602,6 @@ BarWidget {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: root.launch(row.index)
-            onPositionChanged: grid.currentIndex = row.index
           }
         }
       }

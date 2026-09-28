@@ -1,14 +1,14 @@
 # MagicMenu submission draft
 
-Author: MagicMike, Project47 Labs
+Author: EZOGuitars
 Name: MagicMenu
-Version: 1.3.1
+Version: 1.3.2
 Plugin ID: magicmike.frontrow
 Summary: A configurable retro CRT launcher with classic PC fonts, color themes, session controls and live system/network statistics.
 
 Before publication:
 - The original code is licensed under MIT in LICENSE.
-- The Project47 Labs public GitHub repository is https://github.com/EZOGuitars/magicmenu.
+- The EZOGuitars public GitHub repository is https://github.com/EZOGuitars/magicmenu.
 - Test on a clean supported Omarchy installation. Menu/settings screenshots from the development desktop are included below.
 - Confirm the chosen font dependencies and physical-interface network behavior suit the release.
 - Submit the public repository using the marketplace submission form, following its current requirements.
@@ -20,6 +20,6 @@ Submission: https://github.com/omacom/omarchy-plugin-marketplace/issues/6559
 
 ## Screenshots
 
-![MagicMenu v1.3.1 application directory](screenshots/menu.png)
+![MagicMenu v1.3.2 application directory](screenshots/menu.png)
 
 ![MagicMenu appearance settings](screenshots/settings.png)
