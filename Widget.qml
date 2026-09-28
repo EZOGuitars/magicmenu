@@ -30,6 +30,7 @@ BarWidget {
     property bool scanlines: true
     property bool sweep: true
     property bool glitches: true
+    property bool liquidGlass: false
   }
   QtObject {
     id: draft
@@ -41,6 +42,7 @@ BarWidget {
     property bool scanlines: preferences.scanlines
     property bool sweep: preferences.sweep
     property bool glitches: preferences.glitches
+    property bool liquidGlass: preferences.liquidGlass
   }
   function editSettings() {
     draft.fontSize = preferences.fontSize
@@ -51,6 +53,7 @@ BarWidget {
     draft.scanlines = preferences.scanlines
     draft.sweep = preferences.sweep
     draft.glitches = preferences.glitches
+    draft.liquidGlass = preferences.liquidGlass
     settingsOpen = true
     Qt.callLater(function() { fontChooser.forceActiveFocus() })
   }
@@ -63,11 +66,21 @@ BarWidget {
     preferences.scanlines = draft.scanlines
     preferences.sweep = draft.sweep
     preferences.glitches = draft.glitches
+    preferences.liquidGlass = draft.liquidGlass
     preferences.sync()
+    root.applyLiquidGlass()
   }
   function cancelSettings() {
     settingsOpen = false
     search.forceActiveFocus()
+  }
+  readonly property bool liquidGlassEnabled: preferences.liquidGlass
+  function applyLiquidGlass() {
+    liquidGlassProcess.command = ["/usr/bin/hyprctl", "keyword", "plugin:hyprglass:layers:enabled", preferences.liquidGlass ? "true" : "false"]
+    liquidGlassProcess.running = true
+  }
+  Process {
+    id: liquidGlassProcess
   }
   component SettingChoice: Controls.ComboBox {
     id: choice
@@ -242,6 +255,7 @@ BarWidget {
   }
   onOpenedChanged: {
     if (opened) {
+      root.applyLiquidGlass()
       previousCpuTotal = -1
       previousSampleTime = 0
       previousNetwork = ({})
@@ -399,7 +413,7 @@ BarWidget {
       Rectangle {
         anchors.fill: parent
         anchors.margins: -8
-        color: root.palette.bg
+        color: root.liquidGlassEnabled ? Qt.rgba(0.02, 0.05, 0.08, 0.72) : root.palette.bg
         border.color: root.palette.line
         border.width: 1
       }
@@ -773,7 +787,7 @@ BarWidget {
         Rectangle {
           anchors.centerIn: parent
           width: Math.min(560, parent.width - 24)
-          height: Math.min(470, parent.height - 24)
+          height: Math.min(540, parent.height - 24)
           color: root.palette.bg; border.color: root.ink
           clip: true
           Column {
@@ -835,6 +849,12 @@ BarWidget {
             Column {
               visible: !root.appearanceTab
               width: parent.width; spacing: 12
+              SettingChoice {
+                label: "LIQUID GLASS"
+                model: [{label: "OFF"}, {label: "ON"}]
+                currentIndex: draft.liquidGlass ? 1 : 0
+                onActivated: draft.liquidGlass = currentIndex === 1
+              }
               SettingChoice {
                 label: "INTENSITY"
                 model: [{label: "OFF"}, {label: "SUBTLE"}, {label: "FLASHY"}]
