@@ -37,6 +37,16 @@ The stable plugin ID is `magicmike.frontrow` for compatibility with existing Mag
 
 For an upgrade, run the same checks from the new checkout, then reload the shell and open MagicMenu once to verify search, settings, statistics, session actions, and (if installed) Liquid Glass.
 
+## Remove
+
+Disable and remove the installed plugin with:
+
+```sh
+omarchy plugin remove magicmike.frontrow
+```
+
+The plugin does not remove `~/.config/omarchy/magicmenu.ini`; delete that file separately if you also want to discard saved preferences.
+
 ## Use
 
 Click MagicMenu on the bar, search or select a category, then click an application or press Enter. Session buttons execute Shutdown, Restart, Logout or Lock immediately.

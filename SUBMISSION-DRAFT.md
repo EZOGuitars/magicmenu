@@ -1,25 +1,26 @@
-# MagicMenu submission draft
+### Repository URL
 
-Author: EZOGuitars
-Name: MagicMenu
-Version: 1.4.0
-Plugin ID: magicmike.frontrow
-Summary: A configurable retro CRT launcher with classic PC fonts, color themes, session controls and live system/network statistics.
+https://github.com/EZOGuitars/magicmenu
 
-Before publication:
-- The original code is licensed under MIT in LICENSE.
-- The EZOGuitars public GitHub repository is https://github.com/EZOGuitars/magicmenu.
-- Test on a clean supported Omarchy installation. Menu/settings screenshots from the development desktop are included below.
-- Confirm the chosen font dependencies and physical-interface network behavior suit the release.
-- Submit the public repository using the marketplace submission form, following its current requirements.
+### Category
 
-Submission guide: https://github.com/omacom/omarchy-plugin-marketplace/blob/main/SUBMISSION.md
-Marketplace: https://omarchyplugins.com
+Widgets
 
-Submission: https://github.com/omacom/omarchy-plugin-marketplace/issues/6559
+### Tags
 
-## Screenshots
+launcher, quickshell, hyprland
 
-![MagicMenu v1.4.0 application directory](screenshots/menu.png)
+### Suggest a missing tag
 
-![MagicMenu appearance settings](screenshots/settings.png)
+_No response_
+
+### Maintainer notes
+
+MagicMenu v1.4.0 adds a keyboard-aware layer-shell panel, configurable Liquid Glass opacity, live system statistics, and a dependency preflight script. Hyprglass is optional; the normal CRT menu works without it.
+
+### Submission checklist
+- [x] The repository is public and contains installation and removal instructions.
+- [x] I have documented the plugin license and any external dependencies.
+- [x] I confirm that I own or have permission to submit this plugin and its preview assets.
+- [x] The plugin does not overwrite user configuration without explicit consent.
+- [x] I understand that approval is for listing and is not a security review.
