@@ -31,6 +31,7 @@ BarWidget {
     property bool sweep: true
     property bool glitches: true
     property bool liquidGlass: false
+    property real liquidGlassOpacity: 0.72
   }
   QtObject {
     id: draft
@@ -43,6 +44,7 @@ BarWidget {
     property bool sweep: preferences.sweep
     property bool glitches: preferences.glitches
     property bool liquidGlass: preferences.liquidGlass
+    property real liquidGlassOpacity: preferences.liquidGlassOpacity
   }
   function editSettings() {
     draft.fontSize = preferences.fontSize
@@ -54,6 +56,7 @@ BarWidget {
     draft.sweep = preferences.sweep
     draft.glitches = preferences.glitches
     draft.liquidGlass = preferences.liquidGlass
+    draft.liquidGlassOpacity = preferences.liquidGlassOpacity
     settingsOpen = true
     Qt.callLater(function() { fontChooser.forceActiveFocus() })
   }
@@ -67,6 +70,7 @@ BarWidget {
     preferences.sweep = draft.sweep
     preferences.glitches = draft.glitches
     preferences.liquidGlass = draft.liquidGlass
+    preferences.liquidGlassOpacity = draft.liquidGlassOpacity
     preferences.sync()
     root.applyLiquidGlass()
   }
@@ -75,8 +79,11 @@ BarWidget {
     search.forceActiveFocus()
   }
   readonly property bool liquidGlassEnabled: preferences.liquidGlass
+  readonly property real liquidGlassOpacity: Math.max(0.05, Math.min(1.0, preferences.liquidGlassOpacity))
   function applyLiquidGlass() {
-    liquidGlassProcess.command = ["/usr/bin/hyprctl", "keyword", "plugin:hyprglass:layers:enabled", preferences.liquidGlass ? "true" : "false"]
+    // Hyprland's non-legacy parser rejects `hyprctl keyword`; use the
+    // plugin's Lua config API through `hyprctl eval` instead.
+    liquidGlassProcess.command = ["/usr/bin/hyprctl", "eval", "hl.plugin.hyprglass.config({ layers = { enabled = " + (preferences.liquidGlass ? "true" : "false") + " }})"]
     liquidGlassProcess.running = true
   }
   Process {
@@ -380,7 +387,7 @@ BarWidget {
     horizontalMargin: 10
     onPressed: root.opened ? root.close() : root.open()
   }
-  KeyboardPanel {
+  GlassKeyboardPanel {
     id: panel
     anchorItem: button
     bar: root.bar
@@ -390,6 +397,7 @@ BarWidget {
     contentHeight: Math.min(580 * root.fontScale, screen ? screen.height - 70 : 580 * root.fontScale)
     padding: 8
     borderSpec: Border.flat(root.palette.line, 1)
+    cardColor: root.liquidGlassEnabled ? Qt.rgba(0, 0, 0, 0) : Color.popups.background
     // The panel is a full-screen layer for input routing, but must remain
     // visually transparent outside the card itself.
     color: "transparent"
@@ -413,7 +421,9 @@ BarWidget {
       Rectangle {
         anchors.fill: parent
         anchors.margins: -8
-        color: root.liquidGlassEnabled ? Qt.rgba(0.02, 0.05, 0.08, 0.72) : root.palette.bg
+        color: root.liquidGlassEnabled
+          ? Qt.rgba(0.02, 0.05, 0.08, root.liquidGlassOpacity)
+          : root.palette.bg
         border.color: root.palette.line
         border.width: 1
       }
@@ -854,6 +864,14 @@ BarWidget {
                 model: [{label: "OFF"}, {label: "ON"}]
                 currentIndex: draft.liquidGlass ? 1 : 0
                 onActivated: draft.liquidGlass = currentIndex === 1
+              }
+              SettingChoice {
+                label: "GLASS OPACITY"
+                model: [{label: "20%", value: 0.20}, {label: "35%", value: 0.35},
+                        {label: "50%", value: 0.50}, {label: "65%", value: 0.65},
+                        {label: "80%", value: 0.80}, {label: "95%", value: 0.95}]
+                currentIndex: Math.max(0, Math.min(model.length - 1, Math.round((draft.liquidGlassOpacity - 0.20) / 0.15)))
+                onActivated: draft.liquidGlassOpacity = model[currentIndex].value
               }
               SettingChoice {
                 label: "INTENSITY"

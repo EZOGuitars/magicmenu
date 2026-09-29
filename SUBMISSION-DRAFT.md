@@ -2,7 +2,7 @@
 
 Author: EZOGuitars
 Name: MagicMenu
-Version: 1.3.2
+Version: 1.4.0
 Plugin ID: magicmike.frontrow
 Summary: A configurable retro CRT launcher with classic PC fonts, color themes, session controls and live system/network statistics.
 
@@ -20,6 +20,6 @@ Submission: https://github.com/omacom/omarchy-plugin-marketplace/issues/6559
 
 ## Screenshots
 
-![MagicMenu v1.3.2 application directory](screenshots/menu.png)
+![MagicMenu v1.4.0 application directory](screenshots/menu.png)
 
 ![MagicMenu appearance settings](screenshots/settings.png)

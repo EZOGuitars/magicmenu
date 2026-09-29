@@ -6,24 +6,36 @@ A CRT-style application launcher for the Omarchy Quickshell desktop: application
 
 ## Screenshots
 
-MagicMenu v1.3.2. The top-right label reads the installed version from the plugin manifest.
+MagicMenu v1.4.0. The top-right label reads the installed version from the plugin manifest.
 
-![MagicMenu application directory with version label and live system statistics](screenshots/menu.png)
+![MagicMenu v1.4.0 application directory with version label and live system statistics](screenshots/menu.png)
 
-![MagicMenu appearance settings with font, size, color, and sample preview](screenshots/settings.png)
+![MagicMenu effects settings with Liquid Glass, opacity, and CRT effect controls](screenshots/settings.png)
 
-## Requirements
+## Requirements and dependency check
 
-Omarchy with the Quickshell plugin system and app-library host capability, Python 3, and Linux procfs/sysfs. This is not a Walker plugin. Ubuntu Mono, Nimbus Mono PS, Liberation Mono and JetBrainsMono Nerd Font are system fonts; install them separately if absent. Three IBM fonts are bundled.
+Required at runtime: Omarchy with the Quickshell plugin system and app-library host capability, Quickshell, Python 3, `hyprctl`, the Omarchy shell/system helpers, and Linux procfs/sysfs. This is not a Walker plugin. Ubuntu Mono, Nimbus Mono PS, Liberation Mono and JetBrainsMono Nerd Font are optional system fonts; install them separately if absent. Three IBM fonts are bundled.
+
+Run the bundled preflight before installing or upgrading:
+
+```sh
+./check-dependencies.sh
+omarchy plugin validate ./magicmenu
+```
+
+The preflight checks commands and helper paths that the plugin invokes. It reports Hyprglass separately because it is optional: install and enable the Hyprglass plugin if you want the Liquid Glass setting to have an effect. The normal CRT menu works without Hyprglass. The host app-library capability is checked by `omarchy plugin validate` and should be confirmed with a clean-install smoke test.
 
 ## Install a local checkout
 
 ```sh
+./magicmenu/check-dependencies.sh
 omarchy plugin validate ./magicmenu
 omarchy plugin add ./magicmenu --enable
 ```
 
 The stable plugin ID is `magicmike.frontrow` for compatibility with existing MagicMenu installations. Omarchy will reject a second installation with the same ID. Existing users should back up their plugin before replacing it. If a reload does not pick up code changes, run `omarchy restart shell`.
+
+For an upgrade, run the same checks from the new checkout, then reload the shell and open MagicMenu once to verify search, settings, statistics, session actions, and (if installed) Liquid Glass.
 
 ## Use
 
